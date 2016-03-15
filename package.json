@@ -1,13 +1,17 @@
 {
   "name": "img-workshop",
-  "version": "0.0.1",
-  "description": "test",
+  "version": "0.1.0",
+  "description": "Simple automatic image processing",
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "https://github.com/andyhall",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andyhall/img-workshop"
+  },
   "license": "MIT",
   "dependencies": {
     "chokidar": "^1.4.3",
