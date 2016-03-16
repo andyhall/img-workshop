@@ -20,7 +20,6 @@ if (require.main === module) {
 		require('./processor')
 	)
 } else {
-	console.log('invoked!!!!')
 	module.exports = startWatching
 }
 
