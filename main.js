@@ -1,41 +1,59 @@
 'use strict'
 
-var proc = require('./processor')
 var chokidar = require('chokidar')
 
 
+/**************  default settings   ****************/
 
-/******************   settings   *******************/
-
-var INPUT = './input/**/*.png'
-var OUTPUT = './output/'
-
-/******************   settings   *******************/
+var _input = './input/**/*.png'
+var _output = './output/'
 
 
 
-// set up watching behavior
-var watcher = chokidar.watch(INPUT, {
-	ignored: /[\/\\]\./, persistent: true
-})
 
-watcher.on('add', onChange)
-watcher.on('change', onChange)
-watcher.on('error', function(error) { console.error('File watcher error: ', error) })
+// when invoked directly, run with defaults
 
-// on file add or change, start the magic
-function onChange(path, stats) {
-	// run image processor
-	var img = proc(path)
-	// output filename based on input
-	var outfile = OUTPUT + /[^/\\]*$/.exec(path)[0]
-	// save output
-	img.write(outfile, function(err) {
-		if (err) console.error('GM Error: ', err)
-	})
+if (require.main === module) {
+	startWatching(
+		_input,
+		_output,
+		require('./processor')
+	)
+} else {
+	console.log('invoked!!!!')
+	module.exports = startWatching
 }
 
-// wait...
-console.log('img-workshop running, ^C to exit...')
+
+
+
+/**************   implementation    ****************/
+
+
+function startWatching(input, output, proc) {
+	// set up watching behavior
+	var watcher = chokidar.watch(input, {
+		ignored: /[\/\\]\./, persistent: true
+	})
+
+	watcher.on('add', onChange)
+	watcher.on('change', onChange)
+	watcher.on('error', function(error) { console.error('File watcher error: ', error) })
+
+	// on file add or change, start the magic
+	function onChange(path, stats) {
+		// run image processor
+		var img = proc(path)
+		// output filename based on input
+		var outfile = output + /[^/\\]*$/.exec(path)[0]
+		// save output
+		img.write(outfile, function(err) {
+			if (err) console.error('GM Error: ', err)
+		})
+	}
+
+	// wait...
+	console.log('img-workshop running, ^C to exit...')
+}
 
 
